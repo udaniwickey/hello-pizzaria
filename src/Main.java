@@ -53,7 +53,7 @@ public class Main {
                 case "x": programExit();
                     System.exit(0);
                 case "2":
-                    placeOrder();
+                    placeOrder(scanner);
                     break;
                 default: invalidInput();
             }
@@ -66,12 +66,29 @@ public class Main {
                 "To place an Order, press [2]\n");
     }
 
-    private static void placeOrder() {
-        justViewOrder();
-    }
+    private static void placeOrder(Scanner scanner) {
+        int count = 1;
+        while (true){
+            justViewOrder(count);
+            count++;
+            String cart_choice = scanner.nextLine();
 
-    private static void selectTheItems(ItemData itemData) {
-        ArrayList<ItemData> pizzas = new ArrayList<ItemData>();
+            switch (cart_choice) {
+                case "1":
+                case "2":
+                case "3":
+                case "4":
+                    finalBillItems.add(currentDataItems.get(Integer.parseInt(cart_choice) - 1));
+                    break;
+                case "E":
+                    System.out.println(finalBillItems.size());
+                    break;
+            }
+
+            if(cart_choice == "0" || cart_choice == "E"){
+                break;
+            }
+        }
     }
 
     private static void homeViewScreen() {
@@ -130,9 +147,20 @@ public class Main {
                         Press [0] to go back""");
     }
 
-    private static void justViewOrder(){
+    private static void justViewOrder(int count){
+
+        String label = null;
+
+        if (count == 1){
+            label = "first";
+        } else if(count == 2){
+            label = "second";
+        } else if(count == 3){
+            label = "final";
+        }
+
         System.out.println("\nYou can buy 3 items.\n" +
-                "Please select first item you want to buy.\n" +
+                "Please select " + label +" item you want to buy.\n" +
                 "\n" +
                 "#1 BBQ Chicken Pizza - 1299.00 LKR\n" +
                 "#2 Devil Chicken Pizza - 1499.00 LKR\n" +
