@@ -3,9 +3,8 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
-
     static String[] name = {"BBQ Chicken Pizza", "Devil Chicken Pizza", "Vegi Pizza", "Pork Pizza"};
-    static float[] price = {1299.00F, 1499.00F, 999.00F, 1999.00F};
+    static float[] price = {1299.00f, 1499.00f, 999.00f, 1999.00f};
     static String[] description = {"BBQ Chicken brest, Mozzarella Cheese, Bell Pepper",
             "Devil Chicken brest, Mozzarella Cheese, Bell Pepper",
             "Carrot & onions, Mozzarella Cheese, Bell Pepper",
@@ -13,26 +12,24 @@ public class Main {
 
 
     public static void main(String[] args) {
-        boolean programRunning = true;
-        welcomeToPizzaMsgPrint();
+        homeView();
         Scanner scan = new Scanner(System.in);
 
-        while(programRunning){
+        while(true){
             String chooseTheMenuInput = scan.nextLine();
-
             switch(chooseTheMenuInput){
-                case "1": printMenu();
+                case "1": mainMenuView();
                 break;
-                case "2": orderMenu();
+                case "2": makeOrderScreen();
                 break;
                 case "x":
                     System.exit(exitTheProgram());
-                default: incorrectInput();
+                default: invalidInput();
             }
         }
     }
 
-    private static void welcomeToPizzaMsgPrint() {
+    private static void homeView() {
         System.out.println("Welcome to PizzaHut!\n" +
                 "To View our menu, press [1]\n" +
                 "To place an Order, press [2]\n" +
@@ -42,31 +39,43 @@ public class Main {
         System.out.println("Thank you for visiting Pizza Hut, See you next time");
         return 0;
     }
-    private static void incorrectInput() {
+    private static void invalidInput() {
         System.out.println("Please enter valid option from bellow\n" + "To View our menu, press [1]\n" + "To place an Order, press [2]");
     }
 
-    private static void printMenu() {
+    private static void mainMenuView() {
         boolean insideMenu = true;
         justViewMenu();
         Scanner scan = new Scanner(System.in);
 
         while(insideMenu){
             String chooseThePizzaMenuInput = scan.nextLine();
-            switch(chooseThePizzaMenuInput){
-                case "1": printSubMenuItemData1();
+            switch(chooseThePizzaMenuInput) {
+                case "1":
+                    printSubMenuItemData1();
+                    insideMenu = false;
                     break;
-                case "2": printSubMenuItem2();
+                case "2":
+                    printSubMenuItemData2();
+                    insideMenu = false;
                     break;
-                case "3": printSubMenuItem3();
+                case "3":
+                    printSubMenuItemData3();
+                    insideMenu = false;
                     break;
-                case "4": printSubMenuItem4();
+                case "4":
+                    printSubMenuItemData4();
+                    insideMenu = false;
                     break;
-                case "0": insideMenu=false;
-                    break;
-                default: backToPizzaMenu();
+                case "0":
+                    homeView();
+                    return;
+                default:
+                    backToPizzaMenu();
                     break;
             }
+            scan.nextLine();
+            justViewMenu();
         }
     }
 
@@ -97,16 +106,8 @@ public class Main {
                 "Press [0] to go back");
     }
 
-    private static void printSubMenuItem1() {
-        boolean insideSubMenu = true;
-
-        while(insideSubMenu){
-            printSubMenuItemData1();
-            return;
-        }
-    }
-
     private static void printSubMenuItemData1() {
+
         DecimalFormat df = new DecimalFormat("#.00");
         String priceFormatted = String.valueOf(Float.valueOf(df.format(price[0])));
 
@@ -114,47 +115,23 @@ public class Main {
         System.out.println("Description :" + " " + description[0]);
         System.out.println("Price       :"+ " " + priceFormatted + " LKR");
         System.out.println("\nPress any to go back");
-    }
-    private static void printSubMenuItem2() {
-        boolean insideSubMenu = true;
 
-        while(insideSubMenu){
-            printSubMenuItemData2();
-            break;
-        }
     }
 
     private static void printSubMenuItemData2() {
         System.out.println("Name        :" + " " + name[1]);
         System.out.println("Description :" + " " + description[1]);
-        System.out.println("Price       :"+ " " + price[1] + "%.2fLKR");
+        System.out.println("Price       :"+ " " + price[1] + " LKR");
         System.out.println("\nPress any to go back");
     }
 
-    private static void printSubMenuItem3() {
-        boolean insideSubMenu = true;
-
-        while (insideSubMenu){
-            printSubMenuItemData3();
-            break;
-        }
-    }
     private static void printSubMenuItemData3() {
         System.out.println("Name        :" + " " + name[2]);
         System.out.println("Description :" + " " + description[2]);
-        System.out.println("Price       :"+ " " + price[2] + "%.2f" + "LKR");
+        System.out.println("Price       :"+ " " + price[2]);
         System.out.println("\nPress any to go back");
     }
 
-
-    private static void printSubMenuItem4() {
-        boolean insideSubMenu = true;
-
-        while (insideSubMenu){
-            printSubMenuItemData4();
-            break;
-        }
-    }
 
     private static void printSubMenuItemData4() {
         System.out.println("Name        :" + " " + name[3]);
@@ -163,7 +140,7 @@ public class Main {
         System.out.println("\nPress any to go back");
     }
 
-    private static void orderMenu() {
+    private static void makeOrderScreen() {
         int pizzaOrderCount = 0;
         boolean insideOrderMenu = true;
 
@@ -178,14 +155,14 @@ public class Main {
             if(pizzaOrderCount == 1){
                 System.out.println("Please select second item you want to buy.\n");
                 printMenuList();
-                System.out.println("Press item number to select second item\n" + "OR" +
-                        "Press [E] to complete\n" + "\n" + "Press [0] to go back to Main menu");
+                System.out.println("Press item number to select as second item\n" + "OR\n" +
+                        "Press [E] to complete\n" + "OR\n" + "Press [0] to go back to Main menu");
             } else if (pizzaOrderCount == 2) {
                 insideOrderMenu = false;
                 System.out.println("Please select final item you want to buy.\n");
                 printMenuList();
-                System.out.println("Press item number to select final item\n" + "OR" +
-                        "Press [E] to complete\n" + "\n" + "Press [0] to go back to Main menu");
+                System.out.println("Press item number to select as third item\n" + "OR\n" +
+                        "Press [E] to complete\n" + "OR\n" + "Press [0] to go back to Main menu");
             }
             String userInput = scanner.nextLine();
 
@@ -202,44 +179,39 @@ public class Main {
                 case "E":
                     printReceipt(orderedPizzaNames, finalPrice);
                     return;
+                case "0":
+                    homeView();
+                    return;
             }
         }
         printReceipt(orderedPizzaNames, finalPrice);
     }
-
+    private static void printMenuList() {
+        System.out.println("#1 BBQ Chicken Pizza - 1299.00 LKR\n" +
+                "#2 Devil Chicken Pizza - 1499.00 LKR\n" +
+                "#3 Vegi Pizza - 999.00 LKR\n" +
+                "#4 Pork Pizza - 1999.00 LKR" + "\n");
+    }
 
     private static void starterItemsSelectScreen() {
         System.out.println("\nYou can buy 3 items.\n" + "Please select first item you want to buy.\n");
         printMenuList();
-        System.out.println("Press item number to select first item\n" + "OR" + "\n" + "Press [0] to go back to Main menu");
+        System.out.println("Press item number to select first item\n" + "OR\n" + "Press [0] to go back to Main menu");
     }
 
     private static void printReceipt(ArrayList orderedPizzaNames, ArrayList finalPrice) {
         float total = 0;
         System.out.println("You have ordered #" + orderedPizzaNames.size() + " number of items\n" +
-                "            Pizza Hut\n");
+                "            Pizza Hut\n" + "-------------------------------------");
         for(int i = 0; i < finalPrice.size(); i++){
             total = total + Float.parseFloat(finalPrice.get(i).toString());
-            System.out.println("#" + i + " " + orderedPizzaNames.get(i) + " -" + finalPrice.get(i) + "LKR");
+            System.out.println("#" + (i+1) + " " + orderedPizzaNames.get(i) + " - " + finalPrice.get(i) + " LKR");
         }
 
-        System.out.println("Total :" + total);
-        System.out.println("Thank You For Ordering\n" +
-                "-------------------------------------\n" +
-                "Thank you for visiting Pizza Hut, See you next time");
-    }
-
-
-
-    private static void exitFromMenu() {
-
-    }
-    private static void printMenuList() {
-        System.out.println("PizzaHut Menu\n\n" +
-                "#1 BBQ Chicken Pizza - 1299.00 LKR\n" +
-                "#2 Devil Chicken Pizza - 1499.00 LKR\n" +
-                "#3 Vegi Pizza - 999.00 LKR\n" +
-                "#4 Pork Pizza - 1999.00 LKR");
+        System.out.println("\n        Total : " + total + " LKR" + "\n-------------------------------------");
+        System.out.println("      Thank You For Ordering\n" +
+                "-------------------------------------");
+        System.exit(exitTheProgram());
     }
 
 }
