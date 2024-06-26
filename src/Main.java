@@ -53,19 +53,15 @@ public class Main {
             switch(chooseThePizzaMenuInput) {
                 case "1":
                     printSubMenuItemData1();
-                    insideMenu = false;
                     break;
                 case "2":
                     printSubMenuItemData2();
-                    insideMenu = false;
                     break;
                 case "3":
                     printSubMenuItemData3();
-                    insideMenu = false;
                     break;
                 case "4":
                     printSubMenuItemData4();
-                    insideMenu = false;
                     break;
                 case "0":
                     homeView();
@@ -127,7 +123,7 @@ public class Main {
 
     private static void printSubMenuItemData3() {
         System.out.println("Name        :" + " " + name[2]);
-        System.out.println("Description :" + " " + description[2]);
+        System.out.println("Description :" + " " + description[2] + " LKR");
         System.out.println("Price       :"+ " " + price[2]);
         System.out.println("\nPress any to go back");
     }
