@@ -1,5 +1,11 @@
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.simple.parser.ParseException;
+
+import java.io.File;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -10,15 +16,55 @@ public class Main {
             "Carrot & onions, Mozzarella Cheese, Bell Pepper",
             "BBQ Pork, Mozzarella Cheese, Bell Pepper"};
 
+    public static void main(String[] args) throws IOException, ParseException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        File pizzasJsonFile = new File("src/main/resources/menuList.json");
 
-    public static void main(String[] args) {
+        Pizza pizza = objectMapper.readValue(pizzasJsonFile,Pizza.class);
+
+        System.out.println("Pizza name:" + pizza.getPizzaName());
+
+//
+//        List<PizzaItems> pizzaItems = objectMapper.readValue(pizzasJsonFile, new TypeReference<List<PizzaItems>>() {});
+//
+//        System.out.println(Arrays.asList(pizzaItems));
+
+//        JSONParser jsonParser = new JSONParser();
+//
+//        FileReader reader = new FileReader("src/main/resources/menuList.json");
+//
+//        Object object = jsonParser.parse(reader);
+//
+//        JSONObject pizzajsonobject = (JSONObject)object;
+//
+//        String pname = (String) pizzajsonobject.get("pizzaName");
+//        System.out.println("Pizza name:" + pname);
+//
+//        JSONArray array = (JSONArray)pizzajsonobject.get("pizzaItems");
+//
+//        for (int i=0; i< array.size();i++){
+//            JSONObject pizzaItems = (JSONObject) array.get(i);
+//
+//            String name = (String) pizzaItems.get("name");
+//            double largePrice = (double) pizzaItems.get("largePrice");
+//            double mediumPrice = (double) pizzaItems.get("mediumPrice");
+//            double smallPrice = (double) pizzaItems.get("smallPrice");
+//            String description = (String) pizzaItems.get("description");
+//
+//            System.out.println("Pizza name:" + name);
+//            System.out.println("Pizza L:" + largePrice);
+//            System.out.println("Pizza M:" + mediumPrice);
+//            System.out.println("Pizza S:" + smallPrice);
+//            System.out.println("Pizza description:" + description);
+//        }
+
         homeView();
         Scanner scan = new Scanner(System.in);
 
         while(true){
             String chooseTheMenuInput = scan.nextLine();
             switch(chooseTheMenuInput){
-                case "1": mainMenuView();
+                case "1": mainMenuView(pizza.getPizzaItems());
                 break;
                 case "2": makeOrderScreen();
                 break;
@@ -30,7 +76,9 @@ public class Main {
     }
 
     private static void homeView() {
+
         System.out.println("Welcome to PizzaHut!\n" +
+                "Now you can order pizzas in different sizes!\n" +
                 "To View our menu, press [1]\n" +
                 "To place an Order, press [2]\n" +
                 "Press [x] to exit the store");
@@ -43,9 +91,9 @@ public class Main {
         System.out.println("Please enter valid option from bellow\n" + "To View our menu, press [1]\n" + "To place an Order, press [2]");
     }
 
-    private static void mainMenuView() {
+    private static void mainMenuView(List<PizzaItems> pizzaItems) {
         boolean insideMenu = true;
-        justViewMenu();
+        justViewMenu(pizzaItems);
         Scanner scan = new Scanner(System.in);
 
         while(insideMenu){
@@ -71,11 +119,13 @@ public class Main {
                     break;
             }
             scan.nextLine();
-            justViewMenu();
+            justViewMenu(pizzaItems);
         }
     }
 
-    private static void justViewMenu() {
+    private static void justViewMenu(List<PizzaItems> pizzaItems) {
+        System.out.println(pizzaItems.get(0).getName());
+
         System.out.println("PizzaHut Menu\n" +
                 "\n" +
                 "#1 BBQ Chicken Pizza - 1299.00 LKR\n" +
