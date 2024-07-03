@@ -1,4 +1,10 @@
 public class PizzaItems {
+    private String name;
+    private double largePrice;
+    private double mediumPrice;
+    private double smallPrice;
+    private String description;
+
     public String getName() {
         return name;
     }
@@ -32,17 +38,11 @@ public class PizzaItems {
     }
 
     public String getDescription() {
-        return description;
+        return String.valueOf(description);
     }
 
     public void setDescription(String description) {
         this.description = description;
     }
-
-    private String name;
-    private double largePrice;
-    private double mediumPrice;
-    private double smallPrice;
-    private String description;
 
 }

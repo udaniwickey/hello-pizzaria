@@ -1,62 +1,19 @@
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.json.simple.parser.ParseException;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class Main {
-    static String[] name = {"BBQ Chicken Pizza", "Devil Chicken Pizza", "Vegi Pizza", "Pork Pizza"};
-    static float[] price = {1299.00f, 1499.00f, 999.00f, 1999.00f};
-    static String[] description = {"BBQ Chicken brest, Mozzarella Cheese, Bell Pepper",
-            "Devil Chicken brest, Mozzarella Cheese, Bell Pepper",
-            "Carrot & onions, Mozzarella Cheese, Bell Pepper",
-            "BBQ Pork, Mozzarella Cheese, Bell Pepper"};
-
-    public static void main(String[] args) throws IOException, ParseException {
+    public static void main(String[] args) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         File pizzasJsonFile = new File("src/main/resources/menuList.json");
 
         Pizza pizza = objectMapper.readValue(pizzasJsonFile,Pizza.class);
 
-        System.out.println("Pizza name:" + pizza.getPizzaName());
-
-//
-//        List<PizzaItems> pizzaItems = objectMapper.readValue(pizzasJsonFile, new TypeReference<List<PizzaItems>>() {});
-//
-//        System.out.println(Arrays.asList(pizzaItems));
-
-//        JSONParser jsonParser = new JSONParser();
-//
-//        FileReader reader = new FileReader("src/main/resources/menuList.json");
-//
-//        Object object = jsonParser.parse(reader);
-//
-//        JSONObject pizzajsonobject = (JSONObject)object;
-//
-//        String pname = (String) pizzajsonobject.get("pizzaName");
-//        System.out.println("Pizza name:" + pname);
-//
-//        JSONArray array = (JSONArray)pizzajsonobject.get("pizzaItems");
-//
-//        for (int i=0; i< array.size();i++){
-//            JSONObject pizzaItems = (JSONObject) array.get(i);
-//
-//            String name = (String) pizzaItems.get("name");
-//            double largePrice = (double) pizzaItems.get("largePrice");
-//            double mediumPrice = (double) pizzaItems.get("mediumPrice");
-//            double smallPrice = (double) pizzaItems.get("smallPrice");
-//            String description = (String) pizzaItems.get("description");
-//
-//            System.out.println("Pizza name:" + name);
-//            System.out.println("Pizza L:" + largePrice);
-//            System.out.println("Pizza M:" + mediumPrice);
-//            System.out.println("Pizza S:" + smallPrice);
-//            System.out.println("Pizza description:" + description);
-//        }
+        String currencyCode = "LKR";
 
         homeView();
         Scanner scan = new Scanner(System.in);
@@ -64,9 +21,9 @@ public class Main {
         while(true){
             String chooseTheMenuInput = scan.nextLine();
             switch(chooseTheMenuInput){
-                case "1": mainMenuView(pizza.getPizzaItems());
+                case "1": mainMenuView(pizza.getPizzaItems(), currencyCode);
                 break;
-                case "2": makeOrderScreen();
+                case "2": makeOrderScreen(pizza.getPizzaItems(), currencyCode);
                 break;
                 case "x":
                     System.exit(exitTheProgram());
@@ -76,10 +33,9 @@ public class Main {
     }
 
     private static void homeView() {
-
         System.out.println("Welcome to PizzaHut!\n" +
-                "Now you can order pizzas in different sizes!\n" +
-                "To View our menu, press [1]\n" +
+                "Now you can order pizzas in different sizes!" +
+                "\n" + "To View our menu, press [1]\n" +
                 "To place an Order, press [2]\n" +
                 "Press [x] to exit the store");
     }
@@ -91,122 +47,91 @@ public class Main {
         System.out.println("Please enter valid option from bellow\n" + "To View our menu, press [1]\n" + "To place an Order, press [2]");
     }
 
-    private static void mainMenuView(List<PizzaItems> pizzaItems) {
+    private static void mainMenuView(List<PizzaItems> pizzaItems, String currencyCode) {
         boolean insideMenu = true;
-        justViewMenu(pizzaItems);
+        justViewMenu(pizzaItems, currencyCode);
         Scanner scan = new Scanner(System.in);
 
         while(insideMenu){
             String chooseThePizzaMenuInput = scan.nextLine();
             switch(chooseThePizzaMenuInput) {
                 case "1":
-                    printSubMenuItemData1();
-                    break;
                 case "2":
-                    printSubMenuItemData2();
-                    break;
                 case "3":
-                    printSubMenuItemData3();
-                    break;
                 case "4":
-                    printSubMenuItemData4();
+                    printSubMenuItemData(pizzaItems, chooseThePizzaMenuInput, currencyCode);
                     break;
                 case "0":
                     homeView();
                     return;
                 default:
-                    backToPizzaMenu();
+                    backToPizzaMenu(pizzaItems, currencyCode);
                     break;
             }
             scan.nextLine();
-            justViewMenu(pizzaItems);
+            justViewMenu(pizzaItems, currencyCode);
         }
     }
+    private static void menuList(List<PizzaItems> pizzaItems, String currencyCode) {
+        for (int i = 0; i< pizzaItems.size(); i++){
+            System.out.println("#" + (i+1) + " " + pizzaItems.get(i).getName()
+                    + " - " + "L " + pizzaItems.get(i).getLargePrice() + " " + currencyCode + " " + "|"
+                    + " M " + pizzaItems.get(i).getMediumPrice() + " " + currencyCode + " " + "|"
+                    + " S " + pizzaItems.get(i).getSmallPrice() + " " + currencyCode);
+        }
+    }
+    private static void justViewMenu(List<PizzaItems> pizzaItems, String currencyCode) {
+        System.out.println("PizzaHut Menu\n");
 
-    private static void justViewMenu(List<PizzaItems> pizzaItems) {
-        System.out.println(pizzaItems.get(0).getName());
+        menuList(pizzaItems, currencyCode);
 
-        System.out.println("PizzaHut Menu\n" +
-                "\n" +
-                "#1 BBQ Chicken Pizza - 1299.00 LKR\n" +
-                "#2 Devil Chicken Pizza - 1499.00 LKR\n" +
-                "#3 Vegi Pizza - 999.00 LKR\n" +
-                "#4 Pork Pizza - 1999.00 LKR\n" +
-                "\n" +
-                "Press item number to view description\n" +
+        System.out.println("\n" + "Press item number to view description\n" +
+                "OR\n" +
+                "Press [0] to go back");
+
+    }
+
+    private static void backToPizzaMenu(List<PizzaItems> pizzaItems, String currencyCode) {
+        System.out.println("Please enter a valid input\nPizzaHut Menu\n");
+
+        menuList(pizzaItems, currencyCode);
+
+        System.out.println("\n" + "Press item number to view description\n" +
                 "OR\n" +
                 "Press [0] to go back");
     }
 
-    private static void backToPizzaMenu() {
-        System.out.println("Please enter a valid input\n" +
-                "PizzaHut Menu\n" +
-                "\n" +
-                "#1 BBQ Chicken Pizza - 1299.00 LKR\n" +
-                "#2 Devil Chicken Pizza - 1499.00 LKR\n" +
-                "#3 Vegi Pizza - 999.00 LKR\n" +
-                "#4 Pork Pizza - 1999.00 LKR\n" +
-                "\n" +
-                "Press item number to view description\n" +
-                "OR\n" +
-                "Press [0] to go back");
+    private static void printSubMenuItemData(List<PizzaItems> pizzaItems, String chooseThePizzaMenuInput, String currencyCode) {
+        int menu_choice = Integer.parseInt(chooseThePizzaMenuInput);
+        System.out.println("Name : " + pizzaItems.get(menu_choice-1).getName());
+        System.out.println("Description : " + pizzaItems.get(menu_choice-1).getDescription());
+        System.out.println("Available Sizes: " + "Large" + " | " + "Medium" + " | " + "Small" );
+        System.out.println("Large Price : " + pizzaItems.get(menu_choice-1).getLargePrice() + " " + currencyCode);
+        System.out.println("Medium Price : " + pizzaItems.get(menu_choice-1).getMediumPrice() + " " + currencyCode);
+        System.out.println("Small Price : " + pizzaItems.get(menu_choice-1).getSmallPrice() + " " + currencyCode);
     }
-
-    private static void printSubMenuItemData1() {
-
-        DecimalFormat df = new DecimalFormat("#.00");
-        String priceFormatted = String.valueOf(Float.valueOf(df.format(price[0])));
-
-        System.out.println("Name        :" + " " + name[0]);
-        System.out.println("Description :" + " " + description[0]);
-        System.out.println("Price       :"+ " " + priceFormatted + " LKR");
-        System.out.println("\nPress any to go back");
-
-    }
-
-    private static void printSubMenuItemData2() {
-        System.out.println("Name        :" + " " + name[1]);
-        System.out.println("Description :" + " " + description[1]);
-        System.out.println("Price       :"+ " " + price[1] + " LKR");
-        System.out.println("\nPress any to go back");
-    }
-
-    private static void printSubMenuItemData3() {
-        System.out.println("Name        :" + " " + name[2]);
-        System.out.println("Description :" + " " + description[2] + " LKR");
-        System.out.println("Price       :"+ " " + price[2]);
-        System.out.println("\nPress any to go back");
-    }
-
-
-    private static void printSubMenuItemData4() {
-        System.out.println("Name        :" + " " + name[3]);
-        System.out.println("Description :" + " " + description[3]);
-        System.out.println("Price       :"+ " " + price[3] + " LKR");
-        System.out.println("\nPress any to go back");
-    }
-
-    private static void makeOrderScreen() {
+    private static void makeOrderScreen(List<PizzaItems> pizzaItems, String currencyCode) {
         int pizzaOrderCount = 0;
         boolean insideOrderMenu = true;
 
         ArrayList orderedPizzaNames = new ArrayList<String>();
-        ArrayList finalPrice = new ArrayList<Float>();
+        ArrayList pizzaSize = new ArrayList<String>();
+        ArrayList finalPrice = new ArrayList<Double>();
 
         Scanner scanner = new Scanner(System.in);
-        starterItemsSelectScreen();
+        starterItemsSelectScreen(pizzaItems, currencyCode);
 
         while(insideOrderMenu || pizzaOrderCount < 3){
-
             if(pizzaOrderCount == 1){
                 System.out.println("Please select second item you want to buy.\n");
-                printMenuList();
-                System.out.println("Press item number to select as second item\n" + "OR\n" +
+                menuList(pizzaItems, currencyCode);
+                System.out.println("\nPress item number to select as second item\n" + "OR\n" +
                         "Press [E] to complete\n" + "OR\n" + "Press [0] to go back to Main menu");
-            } else if (pizzaOrderCount == 2) {
+            }
+            else if(pizzaOrderCount == 2) {
                 insideOrderMenu = false;
-                System.out.println("Please select final item you want to buy.\n");
-                printMenuList();
+                System.out.println("\nPlease select final item you want to buy.\n");
+                menuList(pizzaItems, currencyCode);
                 System.out.println("Press item number to select as third item\n" + "OR\n" +
                         "Press [E] to complete\n" + "OR\n" + "Press [0] to go back to Main menu");
             }
@@ -218,8 +143,12 @@ public class Main {
                 case "3":
                 case "4":
                     int choice = Integer.parseInt(userInput);
-                    orderedPizzaNames.add(name[choice-1]);
-                    finalPrice.add(price[choice-1]);
+                    System.out.println("You have selected #" + (choice) + " " + pizzaItems.get(choice - 1).getName() + "\n");
+                    System.out.println("Available options -" + " L " + pizzaItems.get(choice - 1).getLargePrice() +  " " + currencyCode + " | "
+                            + " M " + pizzaItems.get(choice - 1).getMediumPrice() + " " + currencyCode + " | "
+                            + " S " + pizzaItems.get(choice - 1).getSmallPrice() + " " + currencyCode + "\n");
+                    selectSize();
+                    selectItemCategory(pizzaItems, userInput, currencyCode);
                     pizzaOrderCount++;
                     break;
                 case "E":
@@ -232,26 +161,90 @@ public class Main {
         }
         printReceipt(orderedPizzaNames, finalPrice);
     }
-    private static void printMenuList() {
-        System.out.println("#1 BBQ Chicken Pizza - 1299.00 LKR\n" +
-                "#2 Devil Chicken Pizza - 1499.00 LKR\n" +
-                "#3 Vegi Pizza - 999.00 LKR\n" +
-                "#4 Pork Pizza - 1999.00 LKR" + "\n");
+
+    private static void selectItemCategory(List<PizzaItems> pizzaItems, String userInput, String currencyCode) {
+        int choice = Integer.parseInt(userInput);
+        ArrayList<String> selectedPizzaName = new ArrayList<>();
+        ArrayList<String> selectedPizzaSizeName = new ArrayList<>();
+        ArrayList<Double> selectedPizzaSize = new ArrayList<>();
+
+        Scanner scanner = new Scanner(System.in);
+        String sizeInput = scanner.nextLine();
+
+        if(choice == 1){
+             if(sizeInput == "L"){
+                 selectedPizzaSizeName.add("Large");
+                 selectedPizzaSize.add(pizzaItems.get(0).getLargePrice());
+             } else if (sizeInput == "M") {
+                 selectedPizzaSizeName.add("Medium");
+                 selectedPizzaSize.add(pizzaItems.get(0).getMediumPrice());
+             } else if (sizeInput == "S"){
+                 selectedPizzaSizeName.add("Small");
+                 selectedPizzaSize.add(pizzaItems.get(0).getSmallPrice());
+             }
+        }
+
+        if(choice == 2){
+            if(sizeInput == "L"){
+                selectedPizzaSizeName.add("Large");
+                selectedPizzaSize.add(pizzaItems.get(1).getLargePrice());
+            } else if (sizeInput == "M") {
+                selectedPizzaSizeName.add("Medium");
+                selectedPizzaSize.add(pizzaItems.get(1).getMediumPrice());
+            } else if (sizeInput == "S"){
+                selectedPizzaSizeName.add("Small");
+                selectedPizzaSize.add(pizzaItems.get(1).getSmallPrice());
+            }
+        }
+
+        if(choice == 3){
+            if(sizeInput == "L"){
+                selectedPizzaSizeName.add("Large");
+                selectedPizzaSize.add(pizzaItems.get(2).getLargePrice());
+            } else if (sizeInput == "M") {
+                selectedPizzaSizeName.add("Medium");
+                selectedPizzaSize.add(pizzaItems.get(2).getMediumPrice());
+            } else if (sizeInput == "S"){
+                selectedPizzaSizeName.add("Small");
+                selectedPizzaSize.add(pizzaItems.get(2).getSmallPrice());
+            }
+        }
+
+        if(choice == 4){
+            if(sizeInput == "L"){
+                selectedPizzaSizeName.add("Large");
+                selectedPizzaSize.add(pizzaItems.get(3).getLargePrice());
+            } else if (sizeInput == "M") {
+                selectedPizzaSizeName.add("Medium");
+                selectedPizzaSize.add(pizzaItems.get(3).getMediumPrice());
+            } else if (sizeInput == "S"){
+                selectedPizzaSizeName.add("Small");
+                selectedPizzaSize.add(pizzaItems.get(3).getSmallPrice());
+            }
+        }
     }
 
-    private static void starterItemsSelectScreen() {
+    private static void selectSize() {
+        System.out.println("Please select a size you wish to buy.");
+        System.out.println("\n" +
+                "Press [L] to select Large\n" +
+                "Press [M] to select Medium\n" +
+                "Press [S] to select small");
+    }
+
+    private static void starterItemsSelectScreen(List<PizzaItems> pizzaItems, String currencyCode) {
         System.out.println("\nYou can buy 3 items.\n" + "Please select first item you want to buy.\n");
-        printMenuList();
-        System.out.println("Press item number to select first item\n" + "OR\n" + "Press [0] to go back to Main menu");
+        menuList(pizzaItems, currencyCode);
+        System.out.println("\nPress item number to select first item\n" + "OR\n" + "Press [0] to go back to Main menu");
     }
 
     private static void printReceipt(ArrayList orderedPizzaNames, ArrayList finalPrice) {
         float total = 0;
         System.out.println("You have ordered #" + orderedPizzaNames.size() + " number of items\n" +
                 "            Pizza Hut\n" + "-------------------------------------");
-        for(int i = 0; i < finalPrice.size(); i++){
+        for (int i = 0; i < finalPrice.size(); i++) {
             total = total + Float.parseFloat(finalPrice.get(i).toString());
-            System.out.println("#" + (i+1) + " " + orderedPizzaNames.get(i) + " - " + finalPrice.get(i) + " LKR");
+            System.out.println("#" + (i + 1) + " " + orderedPizzaNames.get(i) + " - " + finalPrice.get(i) + " LKR");
         }
 
         System.out.println("\n        Total : " + total + " LKR" + "\n-------------------------------------");
