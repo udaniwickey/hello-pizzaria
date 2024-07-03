@@ -7,7 +7,13 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main {
+    static ArrayList<String> selectedPizzaSizeName = new ArrayList<>();
+    static ArrayList<Double> selectedPizzaPrice = new ArrayList<>();
+    static ArrayList<String> selectedPizzaName = new ArrayList<>();
+    static String pizzaInput = null;
+
     public static void main(String[] args) throws IOException {
+
         ObjectMapper objectMapper = new ObjectMapper();
         File pizzasJsonFile = new File("src/main/resources/menuList.json");
 
@@ -90,7 +96,6 @@ public class Main {
                 "Press [0] to go back");
 
     }
-
     private static void backToPizzaMenu(List<PizzaItems> pizzaItems, String currencyCode) {
         System.out.println("Please enter a valid input\nPizzaHut Menu\n");
 
@@ -114,113 +119,80 @@ public class Main {
         int pizzaOrderCount = 0;
         boolean insideOrderMenu = true;
 
-        ArrayList orderedPizzaNames = new ArrayList<String>();
-        ArrayList pizzaSize = new ArrayList<String>();
-        ArrayList finalPrice = new ArrayList<Double>();
-
         Scanner scanner = new Scanner(System.in);
         starterItemsSelectScreen(pizzaItems, currencyCode);
 
         while(insideOrderMenu || pizzaOrderCount < 3){
-            if(pizzaOrderCount == 1){
+            if(pizzaOrderCount == 1 && ((pizzaInput == "L")  || (pizzaInput == "M") || (pizzaInput == "S"))){
                 System.out.println("Please select second item you want to buy.\n");
                 menuList(pizzaItems, currencyCode);
                 System.out.println("\nPress item number to select as second item\n" + "OR\n" +
                         "Press [E] to complete\n" + "OR\n" + "Press [0] to go back to Main menu");
             }
-            else if(pizzaOrderCount == 2) {
-                insideOrderMenu = false;
+            else if((insideOrderMenu = false) && (pizzaOrderCount == 2) && ((pizzaInput == "L")  || (pizzaInput == "M") || (pizzaInput == "S"))) {
                 System.out.println("\nPlease select final item you want to buy.\n");
                 menuList(pizzaItems, currencyCode);
                 System.out.println("Press item number to select as third item\n" + "OR\n" +
                         "Press [E] to complete\n" + "OR\n" + "Press [0] to go back to Main menu");
             }
-            String userInput = scanner.nextLine();
 
+            String userInput = scanner.nextLine();
             switch (userInput) {
                 case "1":
                 case "2":
                 case "3":
                 case "4":
                     int choice = Integer.parseInt(userInput);
-                    System.out.println("You have selected #" + (choice) + " " + pizzaItems.get(choice - 1).getName() + "\n");
+                    System.out.println("You have selected #" + (choice) + " " + pizzaItems.get(choice - 1).getName());
                     System.out.println("Available options -" + " L " + pizzaItems.get(choice - 1).getLargePrice() +  " " + currencyCode + " | "
                             + " M " + pizzaItems.get(choice - 1).getMediumPrice() + " " + currencyCode + " | "
                             + " S " + pizzaItems.get(choice - 1).getSmallPrice() + " " + currencyCode + "\n");
+
                     selectSize();
                     selectItemCategory(pizzaItems, userInput, currencyCode);
                     pizzaOrderCount++;
                     break;
                 case "E":
-                    printReceipt(orderedPizzaNames, finalPrice);
+                    printReceipt(currencyCode);
                     return;
                 case "0":
                     homeView();
                     return;
             }
         }
-        printReceipt(orderedPizzaNames, finalPrice);
+        printReceipt(currencyCode);
     }
 
     private static void selectItemCategory(List<PizzaItems> pizzaItems, String userInput, String currencyCode) {
         int choice = Integer.parseInt(userInput);
-        ArrayList<String> selectedPizzaName = new ArrayList<>();
-        ArrayList<String> selectedPizzaSizeName = new ArrayList<>();
-        ArrayList<Double> selectedPizzaSize = new ArrayList<>();
-
         Scanner scanner = new Scanner(System.in);
         String sizeInput = scanner.nextLine();
-
-        if(choice == 1){
-             if(sizeInput == "L"){
-                 selectedPizzaSizeName.add("Large");
-                 selectedPizzaSize.add(pizzaItems.get(0).getLargePrice());
-             } else if (sizeInput == "M") {
-                 selectedPizzaSizeName.add("Medium");
-                 selectedPizzaSize.add(pizzaItems.get(0).getMediumPrice());
-             } else if (sizeInput == "S"){
-                 selectedPizzaSizeName.add("Small");
-                 selectedPizzaSize.add(pizzaItems.get(0).getSmallPrice());
-             }
-        }
-
-        if(choice == 2){
-            if(sizeInput == "L"){
+        switch (sizeInput) {
+            case "L":
+                selectedPizzaName.add(pizzaItems.get(choice - 1).getName());
                 selectedPizzaSizeName.add("Large");
-                selectedPizzaSize.add(pizzaItems.get(1).getLargePrice());
-            } else if (sizeInput == "M") {
+                selectedPizzaPrice.add(pizzaItems.get(choice - 1).getLargePrice());
+                pizzaInput = "L";
+                break;
+            case "M":
+                selectedPizzaName.add(pizzaItems.get(choice - 1).getName());
                 selectedPizzaSizeName.add("Medium");
-                selectedPizzaSize.add(pizzaItems.get(1).getMediumPrice());
-            } else if (sizeInput == "S"){
+                selectedPizzaPrice.add(pizzaItems.get(choice - 1).getMediumPrice());
+                pizzaInput = "M";
+                break;
+            case "S":
+                selectedPizzaName.add(pizzaItems.get(choice - 1).getName());
                 selectedPizzaSizeName.add("Small");
-                selectedPizzaSize.add(pizzaItems.get(1).getSmallPrice());
-            }
-        }
-
-        if(choice == 3){
-            if(sizeInput == "L"){
-                selectedPizzaSizeName.add("Large");
-                selectedPizzaSize.add(pizzaItems.get(2).getLargePrice());
-            } else if (sizeInput == "M") {
-                selectedPizzaSizeName.add("Medium");
-                selectedPizzaSize.add(pizzaItems.get(2).getMediumPrice());
-            } else if (sizeInput == "S"){
-                selectedPizzaSizeName.add("Small");
-                selectedPizzaSize.add(pizzaItems.get(2).getSmallPrice());
-            }
-        }
-
-        if(choice == 4){
-            if(sizeInput == "L"){
-                selectedPizzaSizeName.add("Large");
-                selectedPizzaSize.add(pizzaItems.get(3).getLargePrice());
-            } else if (sizeInput == "M") {
-                selectedPizzaSizeName.add("Medium");
-                selectedPizzaSize.add(pizzaItems.get(3).getMediumPrice());
-            } else if (sizeInput == "S"){
-                selectedPizzaSizeName.add("Small");
-                selectedPizzaSize.add(pizzaItems.get(3).getSmallPrice());
-            }
+                selectedPizzaPrice.add(pizzaItems.get(choice - 1).getSmallPrice());
+                pizzaInput = "S";
+                break;
+            default:
+                System.out.println("Please enter a valid input.\nYou have selected #" + (choice) + pizzaItems.get(choice - 1).getName() + " \n"
+                        + "Available options - L " + pizzaItems.get(choice - 1).getLargePrice() + " " + currencyCode
+                        + " | M " + pizzaItems.get(choice - 1).getMediumPrice() + " " + currencyCode + "  | S "
+                        + pizzaItems.get(choice - 1).getSmallPrice() + " " + currencyCode);
+                selectSize();
+                return;
         }
     }
 
@@ -238,16 +210,17 @@ public class Main {
         System.out.println("\nPress item number to select first item\n" + "OR\n" + "Press [0] to go back to Main menu");
     }
 
-    private static void printReceipt(ArrayList orderedPizzaNames, ArrayList finalPrice) {
-        float total = 0;
-        System.out.println("You have ordered #" + orderedPizzaNames.size() + " number of items\n" +
+    private static void printReceipt(String currencyCode) {
+        double total = 0;
+        System.out.println("You have ordered #" + selectedPizzaName.size() + " number of items\n" +
                 "            Pizza Hut\n" + "-------------------------------------");
-        for (int i = 0; i < finalPrice.size(); i++) {
-            total = total + Float.parseFloat(finalPrice.get(i).toString());
-            System.out.println("#" + (i + 1) + " " + orderedPizzaNames.get(i) + " - " + finalPrice.get(i) + " LKR");
+        for (int i = 0; i < selectedPizzaPrice.size(); i++) {
+            total = total + Double.parseDouble(selectedPizzaPrice.get(i).toString());
+            System.out.println("#" + (i + 1) + " " + selectedPizzaName.get(i));
+            System.out.println("              - " + selectedPizzaSizeName.get(i) + " - " + selectedPizzaPrice.get(i) + " " + currencyCode);
         }
 
-        System.out.println("\n        Total : " + total + " LKR" + "\n-------------------------------------");
+        System.out.println("\n        Total : " + total + " " + currencyCode + "\n-------------------------------------");
         System.out.println("      Thank You For Ordering\n" +
                 "-------------------------------------");
         System.exit(exitTheProgram());
