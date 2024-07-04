@@ -114,6 +114,8 @@ public class Main {
         System.out.println("Large Price : " + pizzaItems.get(menu_choice-1).getLargePrice() + " " + currencyCode);
         System.out.println("Medium Price : " + pizzaItems.get(menu_choice-1).getMediumPrice() + " " + currencyCode);
         System.out.println("Small Price : " + pizzaItems.get(menu_choice-1).getSmallPrice() + " " + currencyCode);
+
+        System.out.println("\n" + "Press any to go back");
     }
     private static void makeOrderScreen(List<PizzaItems> pizzaItems, String currencyCode) {
         int pizzaOrderCount = 0;
