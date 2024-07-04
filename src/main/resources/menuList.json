@@ -1,0 +1,33 @@
+{
+  "pizzaName": "Seafood pizza",
+  "pizzaItems": [
+    {
+      "name": "BBQ Chicken Pizza",
+      "largePrice": 1899.0,
+      "mediumPrice": 1399.0,
+      "smallPrice": 999.0,
+      "description": "BBQ Chicken brest, Mozzarella Cheese, Bell Pepper"
+    },
+    {
+      "name": "Devil Chicken Pizza",
+      "largePrice": 1999.0,
+      "mediumPrice": 1499.0,
+      "smallPrice": 1099.0,
+      "description": "Devil Chicken brest, Mozzarella Cheese, Bell Pepper"
+    },
+    {
+      "name": "Vegi Pizza",
+      "largePrice": 1099.0,
+      "mediumPrice": 799.0,
+      "smallPrice": 499.0,
+      "description": "Carrot & onions, Mozzarella Cheese, Bell Pepper"
+    },
+    {
+      "name": "Pork Pizza",
+      "largePrice": 2199.0,
+      "mediumPrice": 1599.0,
+      "smallPrice": 1199.0,
+      "description": "BBQ Pork, Mozzarella Cheese, Bell Pepper"
+    }
+  ]
+}
