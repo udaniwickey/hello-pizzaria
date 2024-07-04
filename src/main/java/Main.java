@@ -129,7 +129,8 @@ public class Main {
                 System.out.println("\nPress item number to select as second item\n" + "OR\n" +
                         "Press [E] to complete\n" + "OR\n" + "Press [0] to go back to Main menu");
             }
-            else if((insideOrderMenu = false) && (pizzaOrderCount == 2) && ((pizzaInput == "L")  || (pizzaInput == "M") || (pizzaInput == "S"))) {
+            else if((pizzaOrderCount == 2) && ((pizzaInput == "L")  || (pizzaInput == "M") || (pizzaInput == "S"))) {
+                insideOrderMenu = false;
                 System.out.println("\nPlease select final item you want to buy.\n");
                 menuList(pizzaItems, currencyCode);
                 System.out.println("Press item number to select as third item\n" + "OR\n" +
@@ -137,7 +138,7 @@ public class Main {
             }
 
             String userInput = scanner.nextLine();
-            switch (userInput) {
+            switch(userInput) {
                 case "1":
                 case "2":
                 case "3":
@@ -164,35 +165,42 @@ public class Main {
     }
 
     private static void selectItemCategory(List<PizzaItems> pizzaItems, String userInput, String currencyCode) {
+        boolean insideSizeMenu = true;
         int choice = Integer.parseInt(userInput);
         Scanner scanner = new Scanner(System.in);
-        String sizeInput = scanner.nextLine();
-        switch (sizeInput) {
-            case "L":
-                selectedPizzaName.add(pizzaItems.get(choice - 1).getName());
-                selectedPizzaSizeName.add("Large");
-                selectedPizzaPrice.add(pizzaItems.get(choice - 1).getLargePrice());
-                pizzaInput = "L";
-                break;
-            case "M":
-                selectedPizzaName.add(pizzaItems.get(choice - 1).getName());
-                selectedPizzaSizeName.add("Medium");
-                selectedPizzaPrice.add(pizzaItems.get(choice - 1).getMediumPrice());
-                pizzaInput = "M";
-                break;
-            case "S":
-                selectedPizzaName.add(pizzaItems.get(choice - 1).getName());
-                selectedPizzaSizeName.add("Small");
-                selectedPizzaPrice.add(pizzaItems.get(choice - 1).getSmallPrice());
-                pizzaInput = "S";
-                break;
-            default:
-                System.out.println("Please enter a valid input.\nYou have selected #" + (choice) + pizzaItems.get(choice - 1).getName() + " \n"
-                        + "Available options - L " + pizzaItems.get(choice - 1).getLargePrice() + " " + currencyCode
-                        + " | M " + pizzaItems.get(choice - 1).getMediumPrice() + " " + currencyCode + "  | S "
-                        + pizzaItems.get(choice - 1).getSmallPrice() + " " + currencyCode);
-                selectSize();
-                return;
+
+        while(insideSizeMenu){
+            String sizeInput = scanner.nextLine();
+            switch(sizeInput){
+                case "L":
+                    selectedPizzaName.add(pizzaItems.get(choice - 1).getName());
+                    selectedPizzaSizeName.add("Large");
+                    selectedPizzaPrice.add(pizzaItems.get(choice - 1).getLargePrice());
+                    pizzaInput = "L";
+                    insideSizeMenu = false;
+                    break;
+                case "M":
+                    selectedPizzaName.add(pizzaItems.get(choice - 1).getName());
+                    selectedPizzaSizeName.add("Medium");
+                    selectedPizzaPrice.add(pizzaItems.get(choice - 1).getMediumPrice());
+                    pizzaInput = "M";
+                    insideSizeMenu = false;
+                    break;
+                case "S":
+                    selectedPizzaName.add(pizzaItems.get(choice - 1).getName());
+                    selectedPizzaSizeName.add("Small");
+                    selectedPizzaPrice.add(pizzaItems.get(choice - 1).getSmallPrice());
+                    pizzaInput = "S";
+                    insideSizeMenu = false;
+                    break;
+                default:
+                    System.out.println("Please enter a valid input.\n\nYou have selected #" + (choice) + " " + pizzaItems.get(choice - 1).getName() + "\n\n"
+                            + "Available options - L " + pizzaItems.get(choice - 1).getLargePrice() + " " + currencyCode
+                            + " | M " + pizzaItems.get(choice - 1).getMediumPrice() + " " + currencyCode + "  | S "
+                            + pizzaItems.get(choice - 1).getSmallPrice() + " " + currencyCode);
+                    selectSize();
+                    break;
+            }
         }
     }
 
